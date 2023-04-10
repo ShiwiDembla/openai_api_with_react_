@@ -7,6 +7,7 @@ dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
 
 
+// openai SDK configuration and initialization
 const { Configuration, OpenAIApi } = require('openai');
 const config = new Configuration({
     apiKey: apiKey
@@ -21,13 +22,16 @@ app.use(cors());
 
 //api
 app.post('/chat', async (req, res) => {
-
+    // the api is async, so that the response can be sent after the completion is created
+    // prompt will be accessed from the api request body
     const { prompt } = req.body;
     const completion = await openai.createCompletion({
         prompt: prompt,
         model: 'text-davinci-003',
+        // tokens are the number of words to be generated
         max_tokens: 512,
-        temperature: 0,
+        // temperature is the randomness of the response
+        temperature: 0.5,
     });
 
     res.send(completion.data.choices[0].text);
